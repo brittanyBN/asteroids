@@ -1,5 +1,6 @@
 package com.harper.asteroids;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harper.asteroids.model.NearEarthObject;
 
@@ -9,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,13 +23,17 @@ import java.util.stream.Collectors;
  */
 public class ApproachDetector {
     private static final String NEO_URL = "https://api.nasa.gov/neo/rest/v1/neo/";
-    private List<String> nearEarthObjectIds;
-    private Client client;
-    private ObjectMapper mapper = new ObjectMapper();
+    private final List<String> nearEarthObjectIds;
+    private final Client client;
+    private final ObjectMapper mapper;
+
+
 
     public ApproachDetector(List<String> ids) {
         this.nearEarthObjectIds = ids;
         this.client = ClientBuilder.newClient();
+        mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     /**
@@ -39,10 +46,10 @@ public class ApproachDetector {
             try {
                 System.out.println("Check passing of object " + id);
                 Response response = client
-                    .target(NEO_URL + id)
-                    .queryParam("api_key", App.API_KEY)
-                    .request(MediaType.APPLICATION_JSON)
-                    .get();
+                        .target(NEO_URL + id)
+                        .queryParam("api_key", App.API_KEY)
+                        .request(MediaType.APPLICATION_JSON)
+                        .get();
 
                 NearEarthObject neo = mapper.readValue(response.readEntity(String.class), NearEarthObject.class);
                 neos.add(neo);

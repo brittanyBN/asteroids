@@ -37,16 +37,18 @@ public class App {
 
     protected static String API_KEY = "DEMO_KEY";
 
-    private Client client;
+    private final Client client;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
 
     public App() {
 
 
         ClientConfig configuration = new ClientConfig();
         client = ClientBuilder.newClient(configuration);
+        mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
     }
 
     /**
@@ -63,7 +65,6 @@ public class App {
                 .get();
         System.out.println("Got response: " + response);
         if(response.getStatus() == Response.Status.OK.getStatusCode()) {
-            ObjectMapper mapper = new ObjectMapper();
             String content = response.readEntity(String.class);
 
 
@@ -85,7 +86,7 @@ public class App {
                             closestPass.get().getMissDistance().getKilometers(),
                             closestPass.get().getCloseApproachDateTime(),
                             neo.getName()
-                            ));
+                    ));
                 }
             } catch (IOException e) {
                 System.err.println("Failed scanning for asteroids: " + e);

@@ -1,6 +1,5 @@
 package com.harper.asteroids.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.List;
  *
  * TODO: why the h*** must I add this annotation to ignore unknown properties when I set it on ObjectMapper?
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class NearEarthObject {
 
     @JsonProperty("id")

@@ -56,4 +56,7 @@ Example: private static final String DEFAULT_API_KEY = "DEMO_KEY";
 
 - lambda can be replaced with method references
 
+*Task 1*
+
+
 
