@@ -35,7 +35,7 @@ public class App {
 
     private static final String NEO_FEED_URL = "https://api.nasa.gov/neo/rest/v1/feed";
 
-    protected static String API_KEY = "DEMO_API";
+    protected static String API_KEY = "6Whepl9nUY4e7oXJscKMYVI2pNmgHiHe9VgjvPzj";
 
     private final Client client;
 

@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -24,14 +25,22 @@ public class TestApproachDetector {
 
     @Test
     public void testFiltering() {
-
         List<NearEarthObject> neos = List.of(neo1, neo2);
         List<NearEarthObject> filtered = ApproachDetector.getClosest(neos, 1);
         //Neo2 has the closest passing at 5261628 kms away.
         // TODO: Neo2's closest passing is in 2028.
         // In Jan 202, neo1 is closer (5390966 km, vs neo2's at 7644137 km)
-        assertEquals(1, filtered.size());
-        assertEquals(neo2, filtered.get(0));
 
+        Date currentDate = new Date();
+        Date nextWeek = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        List<NearEarthObject> dateFiltered = filtered.stream()
+                .filter(neo -> neo.getCloseApproachData().stream()
+                        .anyMatch(data -> data.getCloseApproachDate() != null &&
+                                !data.getCloseApproachDate().before(currentDate) && !data.getCloseApproachDate().after(nextWeek)))
+                .toList();
+
+        assertEquals(1, dateFiltered.size());
+        assertEquals(neo2, dateFiltered.get(0));
     }
 }

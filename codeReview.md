@@ -66,4 +66,15 @@ error in the order of operations.
 
 *Task 2*
 
+The sorting algorithm was only looking at distance, but was including asteroids from all different
+years. By using java's date utility package I was able to calculate the current day and the date
+one week from now. I then filtered the NEO's based on date and their distance. There was one asteroid
+today (9333935.151  Mon Aug 21 08:14:00 CEST 2023) that was not included, and that is due to
+the time (08:14:00).
+
+*Task 3*
+There are multiple different ways to implement multithreading in java, and I chose to use
+the CompletableFuture class. CompletableFuture allows for simple, concise code that will 
+speed up the program because it retrieves data in parallel.  
+
 

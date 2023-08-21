@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -39,25 +40,31 @@ public class ApproachDetector {
      * @param limit - n
      */
     public List<NearEarthObject> getClosestApproaches(int limit) {
-        List<NearEarthObject> neos = new ArrayList<>(limit);
-        for(String id: nearEarthObjectIds) {
-            try {
-                System.out.println("Check passing of object " + id);
-                Response response = client
-                        .target(NEO_URL + id)
-                        .queryParam("api_key", App.API_KEY)
-                        .request(MediaType.APPLICATION_JSON)
-                        .get();
+        List<CompletableFuture<NearEarthObject>> futures = nearEarthObjectIds.stream()
+                .map(id -> CompletableFuture.supplyAsync(() -> getNeoData(id)))
+                .toList();
 
-                NearEarthObject neo = mapper.readValue(response.readEntity(String.class), NearEarthObject.class);
-                neos.add(neo);
-            } catch (IOException e) {
-                System.err.println("Failed scanning for asteroids: " + e);
-            }
-        }
+        List<NearEarthObject> neos = futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+
         System.out.println("Received " + neos.size() + " neos, now sorting");
-
         return getClosest(neos, limit);
+    }
+
+    private NearEarthObject getNeoData(String id) {
+        try {
+            System.out.println("Check passing of object " + id);
+            Response response = client
+                    .target(NEO_URL + id)
+                    .queryParam("api_key", App.API_KEY)
+                    .request(MediaType.APPLICATION_JSON)
+                    .get();
+            return mapper.readValue(response.readEntity(String.class), NearEarthObject.class);
+        } catch (IOException e) {
+            System.err.println("Failed scanning for asteroids: " + e);
+            return null;
+        }
     }
 
     /**
@@ -68,9 +75,7 @@ public class ApproachDetector {
      */
     public static List<NearEarthObject> getClosest(List<NearEarthObject> neos, int limit) {
         Date today = new Date();
-        System.out.println("date " + today);
         Date nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-        System.out.println("date " + nextWeek);
 
         return neos.stream()
                 .filter(neo -> {
