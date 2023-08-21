@@ -1,7 +1,7 @@
 package com.harper.asteroids;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harper.asteroids.model.CloseApproachData;
 import com.harper.asteroids.model.NearEarthObject;
 
 import javax.ws.rs.client.Client;
@@ -10,7 +10,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +32,6 @@ public class ApproachDetector {
         this.nearEarthObjectIds = ids;
         this.client = ClientBuilder.newClient();
         mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     /**
@@ -69,9 +67,22 @@ public class ApproachDetector {
      * @return
      */
     public static List<NearEarthObject> getClosest(List<NearEarthObject> neos, int limit) {
-        //TODO: Should ignore the passes that are not today/this week.
+        Date today = new Date();
+        System.out.println("date " + today);
+        Date nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+        System.out.println("date " + nextWeek);
+
         return neos.stream()
-                .filter(neo -> neo.getCloseApproachData() != null && ! neo.getCloseApproachData().isEmpty())
+                .filter(neo -> {
+                    List<CloseApproachData> closeApproachDataList = neo.getCloseApproachData();
+                    if (closeApproachDataList.isEmpty()) {
+                        return false;
+                    }
+
+                    return closeApproachDataList.stream()
+                            .anyMatch(data -> data.getCloseApproachDate() != null &&
+                                    !data.getCloseApproachDate().before(today) && !data.getCloseApproachDate().after(nextWeek));
+                })
                 .sorted(new VicinityComparator())
                 .limit(limit)
                 .collect(Collectors.toList());

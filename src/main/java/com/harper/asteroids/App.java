@@ -35,7 +35,7 @@ public class App {
 
     private static final String NEO_FEED_URL = "https://api.nasa.gov/neo/rest/v1/feed";
 
-    protected static String API_KEY = "DEMO_KEY";
+    protected static String API_KEY = "DEMO_API";
 
     private final Client client;
 
@@ -43,12 +43,9 @@ public class App {
 
     public App() {
 
-
         ClientConfig configuration = new ClientConfig();
         client = ClientBuilder.newClient(configuration);
         mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
     }
 
     /**

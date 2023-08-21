@@ -58,5 +58,12 @@ Example: private static final String DEFAULT_API_KEY = "DEMO_KEY";
 
 *Task 1*
 
+Jackson API provides two ways to ignore unkown fields: @JsonIgnoreProperties annotation (class level)
+and configure() (ObjectMapper level). The preferred approach is to use the @JsonIgnoreProperties annotation
+because it gives you more control. You decide which model classes have properties that can be ignored.
+Previously both of these methods were being used, and combining these may have caused an 
+error in the order of operations.
+
+*Task 2*
 
 
