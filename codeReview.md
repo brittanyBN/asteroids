@@ -38,8 +38,6 @@ Example: private static final String DEFAULT_API_KEY = "DEMO_KEY";
 
 - ObjectMapper created twice, redundant instance.
 
-- Use String.format for cleaner output.
-
 - Remember "Single Responsibility Principle" and split longer methods up when necessary.
 
 - close Client instance after all invocations for target resource have been performed
@@ -48,13 +46,11 @@ Example: private static final String DEFAULT_API_KEY = "DEMO_KEY";
 
 - neos is quite vague. nearEarthObjects would be clearer name.
 
-- Use String.format for cleaner output.
-
 *VicinityComparator*
 
 - It's possible to use Optional.orElse to remove the nested if statements.
 
-- lambda can be replaced with method references
+- lambda can be replaced with method references.
 
 *Task 1*
 

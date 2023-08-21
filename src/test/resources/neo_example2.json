@@ -29,8 +29,8 @@
   "is_potentially_hazardous_asteroid": false,
   "close_approach_data": [
     {
-      "close_approach_date": "1925-09-15",
-      "close_approach_date_full": "1925-Sep-15 22:22",
+      "close_approach_date": "2023-08-27",
+      "close_approach_date_full": "2023-Aug-27 22:22",
       "epoch_date_close_approach": -1397785080000,
       "relative_velocity": {
         "kilometers_per_second": "6.658304231",

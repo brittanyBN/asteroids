@@ -31,13 +31,13 @@ public class TestApproachDetector {
         // TODO: Neo2's closest passing is in 2028.
         // In Jan 202, neo1 is closer (5390966 km, vs neo2's at 7644137 km)
 
-        Date currentDate = new Date();
-        Date nextWeek = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+        Date today = new Date();
+        Date nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
 
         List<NearEarthObject> dateFiltered = filtered.stream()
                 .filter(neo -> neo.getCloseApproachData().stream()
                         .anyMatch(data -> data.getCloseApproachDate() != null &&
-                                !data.getCloseApproachDate().before(currentDate) && !data.getCloseApproachDate().after(nextWeek)))
+                                !data.getCloseApproachDate().before(today) && !data.getCloseApproachDate().after(nextWeek)))
                 .toList();
 
         assertEquals(1, dateFiltered.size());
